@@ -12,7 +12,7 @@
             {
                 if (value.Length < 3)
                 {
-                    Console.WriteLine("Invalid name");
+                    _Name = "Invalid name";
                 }
                 else
                 {
@@ -20,7 +20,6 @@
                 }
             }
         }
-
         private string _Email;
         public string Email
         {
@@ -29,7 +28,7 @@
             {
                 if (!value.Contains("@") || !value.Contains("."))
                 {
-                    Console.WriteLine("Invalid email");
+                    _Email = "Invalid email";
                 }
                 else
                 {
@@ -37,15 +36,10 @@
                 }
             }
         }
-
         public List<TaskApp> Tasks { get; set; } = new List<TaskApp>();
         public List<User> Users { get; set; } = new List<User>();
 
-        public void AddUser(User user)
-        {
-            Users.Add(user);
-        }
-
+        
         public void AddUserTask(TaskApp task)
         {
             Tasks.Add(task);
@@ -53,16 +47,29 @@
 
         public void RemoveUserTask(int taskId)
         {
-            var task = Tasks.FirstOrDefault(x => x.Id == taskId);
-            if (task != null)
-            {
-                Tasks.Remove(task);
-            }
+            Tasks.RemoveAll(x => x.Id == taskId);
         }
 
         public List<TaskApp> GetActiveUserTasks()
         {
             return Tasks.Where(x => x.Status != Status.Done.ToString()).ToList();
+        }
+        public void MarkAsDone(int taskId)
+        {
+            var task = Tasks.First(x => x.Id == taskId);
+            if (task.Status == Project1.Status.Done.ToString())
+            {
+                Console.WriteLine("Invalid..Task is already done.");
+                return;
+            }
+            task.Status = Project1.Status.Done.ToString();
+        }
+
+        public List<TaskApp> Search(string title, Status? status)
+        {
+            var result = Tasks.Where(x=> (string.IsNullOrEmpty(title)? x.Title.Contains(title.Trim().ToLower()) : true) 
+            && (status.HasValue ? x.Status == status.ToString() : true)).ToList();
+            return result;
         }
     }
 }

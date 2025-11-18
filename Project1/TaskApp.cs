@@ -1,8 +1,8 @@
 ﻿namespace Project1
 {
-    public abstract class TaskApp
+    public class TaskApp
     {
-       public int Id { get; set; }
+       public int Id {  get; private set; }
         public string Status { get; set; }
 
         private string _Title;
@@ -27,32 +27,32 @@
         }
         public string Description { get; set; }
 
-        public DateTime? _DueDate;
+        private DateTime? _DueDate;
         public DateTime? DueDate
         {
             get 
             { 
-                return _DueDate; 
+                return _DueDate;//.ToString("dd - MM - yyyy") بس لازم نعمل بروبيرتي string
             }
             set
             {
-                if (value < DateTime.Today)
+                if (value.HasValue)
                 {
-                    _DueDate = null;
-                }
-                else
-                {
-                    _DueDate = value;
+                    if (value?.Date < DateTime.Now.Date)
+                    {
+                        _DueDate = null;
+                    }
+                    else
+                    {
+                        _DueDate = value;
+                    }
                 }
             }
         }
 
-        public string GetFormattedDate()
-        {
-            return _DueDate?.ToString("dd - MM - yyyy");
+        public TaskApp() 
+        { 
+            Helper.GenerateId();
         }
-        public abstract void MarkAsDone();
-        public abstract void AddTask(TaskApp task);
-        public abstract string ListAllTasks();
     }
 }

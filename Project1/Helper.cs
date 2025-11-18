@@ -2,7 +2,7 @@
 {
     public static class Helper
     {
-        public static int IdCounter = 1;
+        private static int IdCounter = 1;
         
         public static int GenerateId()
         {
